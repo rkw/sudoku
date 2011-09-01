@@ -92,7 +92,9 @@ $(function() {
                 var divLoc = $(this.el).offset();
                 $(pop).filter('ul.guesses')
                     .css({'top': divLoc.top - 25, 'left': divLoc.left + 25})
-                    .appendTo('body');
+                    .hide()
+                    .appendTo('body')
+                    .fadeIn(500);
                     
                 // Bind click event to the model's guess() method,
                 //.. bind the scope of of guess() to the model,
@@ -172,7 +174,8 @@ $(function() {
 		events: {
 			'click #loginname': 'promptName',
 			'click #startgame': 'startGame',
-            'click #solvegame': 'solveGame'
+            'click #solvegame': 'solveGame',
+            'change #difficulty': 'startGame'
 		},
 		
 		initialize: function() {
@@ -217,25 +220,37 @@ $(function() {
 		},
 		
 		startGame: function() {
-			this.$('#board').empty();
+			this.$('#board').empty().hide();
 			this.totalMoves = 0;
 			Boxes.reset();
+			$('ul.guesses').remove();	//.. close all 'guess' popups
 
-            /*var url = $('#location').val() + '?callback=?';
-            $.getJSON(url, function() {
-                console.log('xxx');        
-            });*/
-            
-            var data = [4,0,0,0,0,0,0,5,9,
-                        3,0,0,0,5,0,6,0,4,
-                        0,1,0,0,0,8,0,0,0,
-                        7,0,0,8,0,3,0,6,0,
-                        0,0,0,0,0,0,0,0,0,
-                        0,5,0,9,0,4,0,0,7,
-                        0,0,0,3,0,0,0,2,0,
-                        2,0,6,0,8,0,0,0,3,
-                        9,7,0,0,0,0,0,0,8];
-
+            var defData = [	4,0,0,0,0,0,0,5,9,
+	                        3,0,0,0,5,0,6,0,4,
+	                        0,1,0,0,0,8,0,0,0,
+	                        7,0,0,8,0,3,0,6,0,
+	                        0,0,0,0,0,0,0,0,0,
+	                        0,5,0,9,0,4,0,0,7,
+	                        0,0,0,3,0,0,0,2,0,
+	                        2,0,6,0,8,0,0,0,3,
+	                        9,7,0,0,0,0,0,0,8];
+         
+         	var thisView = this;
+         	var content = $('<div></div>');
+         	var url = '/bbsudoku/sudoku.php?level=' + $('#difficulty').val();
+           	content.load(url + ' table.t', function(res, status, xmlReq) {
+           		if (status != 'error') {
+	       			var gamedata = content.find('input').map(function() {
+						return parseInt($(this).val() ||  0);
+					}).toArray();
+					thisView.loadData(gamedata);           			
+           		} else {
+           			thisView.loadData(defData);
+           		}
+       		});
+		},
+        
+        loadData: function(data) {
             // Set all 81 boxes
     		for (var i in data) {
                 var box = new Box({cell:i});
@@ -286,7 +301,8 @@ $(function() {
             }
             
     		this.render();
-		},
+    		this.$('#board').fadeIn(1500);
+        },
         
         solveGame: function() {
             for (var i in Groups) {
