@@ -238,7 +238,7 @@ $(function() {
          	var thisView = this;
          	var content = $('<div></div>');
          	var url = 'sudoku-data?level=' + $('#difficulty').val();
-           	content.load(url + ' table.t', function(res, status, xmlReq) {
+           	content.load(url + ' #puzzle_grid', function(res, status, xmlReq) {
            		if (status != 'error') {
 	       			var gamedata = content.find('input').map(function() {
 						return parseInt($(this).val() ||  0);
