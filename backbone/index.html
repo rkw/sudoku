@@ -6,8 +6,8 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script> 
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.4.0/backbone-min.js"></script> 
 
-    	<script type="text/javascript" src="sudoku.js"></script>
-        <link type="text/css" rel="stylesheet" href="style.css" >
+    	<script type="text/javascript" src="backbone/sudoku.js"></script>
+        <link type="text/css" rel="stylesheet" href="backbone/style.css" >
     </head>
 
 	<body>
@@ -23,9 +23,9 @@
     		<div id='controls'>
     			<select id='difficulty'>
     				<option value='1'>Easy</option>
-    				<option value='2'>Medium</option>
+    				<option value='2' selected>Medium</option>
     				<option value='3'>Hard</option>
-    				<option value='4' selected>Evil</option>
+    				<option value='4'>Evil</option>
     			</select> 
     			<input id='startgame' type='button' value='Start Game' />
     			<input id='solvegame' type='button' value='Solve Knowns' />

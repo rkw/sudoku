@@ -5,16 +5,18 @@ const cheerio = require('cheerio')
 
 let app = express()
 
-// quick and dirty
-app.get('/', function (req, res) {   
-    res.sendFile(path.join(__dirname + '/index.html'))
+// old backbone code
+app.get('/backbone', function (req, res) {   
+    res.sendFile(path.join(__dirname + '/backbone/index.html'))
 })   
-app.get('/style.css', function (req, res) {   
-    res.sendFile(path.join(__dirname + '/style.css'))
+app.get('/backbone/style.css', function (req, res) {   
+    res.sendFile(path.join(__dirname + '/backbone/style.css'))
 })   
-app.get('/sudoku.js', function (req, res) {   
-    res.sendFile(path.join(__dirname + '/sudoku.js'))
+app.get('/backbone/sudoku.js', function (req, res) {   
+    res.sendFile(path.join(__dirname + '/backbone/sudoku.js'))
 })   
+
+// sudoku data
 app.get('/sudoku-data', function (req, res) {   
     axios.get(`http://nine.websudoku.com/?level=${req.query.level}`)
         .then(data =>  {
