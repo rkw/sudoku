@@ -21,7 +21,10 @@ app.get('/sudoku-data', function (req, res) {
     axios.get(`http://nine.websudoku.com/?level=${req.query.level}`)
         .then(data =>  {
             let $ = cheerio.load(data.data);
-            res.send($('body #puzzle_grid').parent().html())
+            let values = $('body #puzzle_grid input').map(function() {
+                return parseInt($(this).val() ||  0);
+            }).toArray()
+            res.send(values)
         })
         .catch(error => {
             console.log(error)
