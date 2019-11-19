@@ -3,17 +3,17 @@ const path = require('path')
 const axios = require('axios')
 const cheerio = require('cheerio')
 
-let app = express()
+const app = express();
 
 // old backbone code
 app.get('/backbone', function (req, res) {   
-    res.sendFile(path.join(__dirname + '/backbone/index.html'))
+    res.sendFile(path.join(__dirname, 'backbone', 'index.html'))
 })   
 app.get('/backbone/style.css', function (req, res) {   
-    res.sendFile(path.join(__dirname + '/backbone/style.css'))
+    res.sendFile(path.join(__dirname, 'backbone', 'style.css'))
 })   
 app.get('/backbone/sudoku.js', function (req, res) {   
-    res.sendFile(path.join(__dirname + '/backbone/sudoku.js'))
+    res.sendFile(path.join(__dirname, 'backbone', 'sudoku.js'))
 })   
 
 // sudoku data
@@ -27,6 +27,12 @@ app.get('/sudoku-data', function (req, res) {
             console.log(error)
         })
 })
+
+// react
+app.use(express.static(path.join(__dirname, 'react')));
+app.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname, 'react', 'index.html'));
+});
 
 let server_port = process.env.YOUR_PORT || process.env.PORT || 3000
 let server_host = process.env.YOUR_HOST || '0.0.0.0'
