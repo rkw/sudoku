@@ -195,6 +195,7 @@ $(function () {
                 remaining: Boxes.remaining().length
             }));
             this.renderGuesses();
+            this.checkWin();
         },
 
         renderGuesses: function () {
@@ -225,16 +226,26 @@ $(function () {
             Boxes.reset();
             $('ul.guesses').remove();	//.. close all 'guess' popups
 
-            var defData = [4, 0, 0, 0, 0, 0, 0, 5, 9,
-                3, 0, 0, 0, 5, 0, 6, 0, 4,
-                0, 1, 0, 0, 0, 8, 0, 0, 0,
-                7, 0, 0, 8, 0, 3, 0, 6, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 5, 0, 9, 0, 4, 0, 0, 7,
-                0, 0, 0, 3, 0, 0, 0, 2, 0,
-                2, 0, 6, 0, 8, 0, 0, 0, 3,
-                9, 7, 0, 0, 0, 0, 0, 0, 8];
-
+            // var defData = [4, 0, 0, 0, 0, 0, 0, 5, 9,
+            //     3, 0, 0, 0, 5, 0, 6, 0, 4,
+            //     0, 1, 0, 0, 0, 8, 0, 0, 0,
+            //     7, 0, 0, 8, 0, 3, 0, 6, 0,
+            //     0, 0, 0, 0, 0, 0, 0, 0, 0,
+            //     0, 5, 0, 9, 0, 4, 0, 0, 7,
+            //     0, 0, 0, 3, 0, 0, 0, 2, 0,
+            //     2, 0, 6, 0, 8, 0, 0, 0, 3,
+            //     9, 7, 0, 0, 0, 0, 0, 0, 8];
+            let defData = [
+                3, 6, 7, 8, 9, 0, 5, 4, 2,
+                2, 8, 1, 3, 4, 5, 7, 6, 9,
+                5, 4, 9, 6, 2, 7, 0, 3, 8,
+                6, 2, 3, 7, 1, 4, 8, 9, 5,
+                7, 5, 8, 9, 3, 2, 4, 1, 6,
+                9, 1, 4, 5, 6, 8, 2, 7, 3,
+                4, 3, 2, 1, 5, 9, 6, 8, 7,
+                1, 7, 6, 2, 8, 3, 9, 5, 4,
+                8, 9, 5, 4, 7, 6, 3, 2, 0
+            ]
             var thisView = this;
             var url = 'sudoku-data?level=' + $('#difficulty').val();
             $.get(url).done(function (data) { thisView.loadData(data); })
@@ -306,8 +317,17 @@ $(function () {
             $('#board').append(view.render().el);
         },
 
+        checkWin: function () {
+            for (let i = 0; i < Groups.length; i++) {
+                var group = Groups[i]
+                var values = new Set(group.map((box) => box.get('value') || box.get('guess')).filter(Boolean))
+                if (values.size < 9) return false
+            }
+            window.setTimeout(_.bind(this.promptNewGame,this), 1)    //.. allow render cycle to occur before prompt
+        },
+
         promptNewGame: function () {
-            if (confirm('Congratulations ' + ls.getItem('loginname') + '!\nYou solved it in ' + this.totalClicks + ' clicks.\n\n' + 'Continue to new game?')) {
+            if (confirm('Congratulations!\nYou solved it in ' + this.totalMoves + ' clicks.\n\n' + 'Continue to new game?')) {
                 this.startGame();
             }
         }
